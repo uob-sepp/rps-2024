@@ -9,12 +9,20 @@ plugins {
   application
 }
 
+repositories {
+  mavenCentral()
+}
+
 sourceSets {
   main {
     java {
       setSrcDirs(listOf("."))
     }
   }
+}
+
+dependencies {
+  implementation("info.picocli:picocli:4.7.6")
 }
 
 application {

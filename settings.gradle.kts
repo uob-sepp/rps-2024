@@ -11,3 +11,4 @@ plugins {
 }
 
 rootProject.name = "rps-2024"
+include("app")

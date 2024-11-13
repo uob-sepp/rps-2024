@@ -30,6 +30,9 @@ jobs:
       - name: "Build project"
         run: ./gradlew app:compileJava
 
+      - name: "Test project"
+        run: ./gradlew test
+
       - name: "Produce distribution"
         run: ./gradlew distZip
 

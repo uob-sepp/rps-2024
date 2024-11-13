@@ -7,6 +7,7 @@
 
 plugins {
   application
+  jacoco
 }
 
 repositories {
@@ -26,4 +27,14 @@ application {
 
 tasks.named<Test>("test") {
   useJUnitPlatform()
+}
+
+tasks.jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = "0.5".toBigDecimal()
+      }
+    }
+  }
 }

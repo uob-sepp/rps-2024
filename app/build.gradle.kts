@@ -15,8 +15,15 @@ repositories {
 
 dependencies {
   implementation("info.picocli:picocli:4.7.6")
+
+  testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 application {
   mainClass = "Program"
+}
+
+tasks.named<Test>("test") {
+  useJUnitPlatform()
 }

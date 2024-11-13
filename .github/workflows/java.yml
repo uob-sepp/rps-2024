@@ -28,7 +28,7 @@ jobs:
           cache: "gradle"
 
       - name: "Build project"
-        run: ./gradlew build
+        run: ./gradlew app:compileJava
 
       - name: "Produce distribution"
         run: ./gradlew distZip

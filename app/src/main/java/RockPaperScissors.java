@@ -6,13 +6,13 @@ import picocli.CommandLine.Option;
 @Command
 public class RockPaperScissors implements Callable<Integer> {
 
-  @Option(names = { "-n"} )
+  @Option(names = { "-n" })
   private int numberOfGames = 1000;
 
-  @Option(names = { "-p1"} )
+  @Option(names = { "-p1" })
   private String player1Agent = "AlwaysRock";
 
-  @Option(names = { "-p2"} )
+  @Option(names = { "-p2" })
   private String player2Agent = "AlwaysPaper";
 
   public Winner determineWinner(HandShape p1, HandShape p2) {
@@ -35,28 +35,26 @@ public class RockPaperScissors implements Callable<Integer> {
     throw new Exception(String.format("Unknown agent: %s", name));
   }
 
+  public Winner play(IAgent player1, IAgent player2) {
+    HandShape p1choice = player1.nextMove();
+    HandShape p2choice = player2.nextMove();
+
+    return determineWinner(p1choice, p2choice);
+  }
+
+  public void play(IGameOutput output, int numberOfGames, IAgent player1, IAgent player2) {
+    while (numberOfGames > 0) {
+      output.ReportOutcome(play(player1, player2));
+      numberOfGames--;
+    }
+  }
+
   @Override
   public Integer call() throws Exception {
     IAgent player1 = agentForName(player1Agent);
     IAgent player2 = agentForName(player2Agent);
 
-    while (numberOfGames > 0) {
-      HandShape p1choice = player1.nextMove();
-      HandShape p2choice = player2.nextMove();
-
-      switch (determineWinner(p1choice, p2choice)) {
-      case PLAYER_ONE:
-      System.out.println("Player 1 wins!");
-      break;
-      case PLAYER_TWO:
-      System.out.println("Player 2 wins!");
-      break;
-      case DRAW:
-      System.out.println("It's a draw!");
-      break;
-    }
-    numberOfGames--;
-    }
+    this.play(new StdoutGameOutput(), this.numberOfGames, player1, player2);
 
     return 0;
   }

@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import io.javalin.Javalin;
@@ -16,6 +17,15 @@ public class RockPaperScissors implements Callable<Integer> {
   @Option(names = { "-p2" })
   private String player2Agent = "AlwaysPaper";
 
+  private HashMap<String, BaseAgent> agents = new HashMap<String, BaseAgent>();
+
+  public RockPaperScissors() {
+    this.agents.put("AlwaysRock", new AlwaysRockAgent());
+    this.agents.put("AlwaysScissors", new AlwaysScissorsAgent());
+    this.agents.put("AlwaysPaper", new AlwaysPaperAgent());
+    this.agents.put("StrategyChanging", new StrategyChangingAgent());
+  }
+
   public Winner determineWinner(HandShape p1, HandShape p2) {
     if (p1.beats() == p2)
       return Winner.PLAYER_ONE;
@@ -25,12 +35,11 @@ public class RockPaperScissors implements Callable<Integer> {
       return Winner.DRAW;
   }
 
-  public IAgent agentForName(String name) throws Exception {
-    switch (name) {
-      case "AlwaysRock":
-        return new AlwaysRockAgent();
-      case "AlwaysPaper":
-        return new AlwaysPaperAgent();
+  public BaseAgent agentForName(String name) throws Exception {
+    BaseAgent agent = this.agents.get(name);
+
+    if (agent != null) {
+      return agent;
     }
 
     throw new Exception(String.format("Unknown agent: %s", name));
@@ -75,6 +84,7 @@ public class RockPaperScissors implements Callable<Integer> {
       play(output, numberOfGames, player1, player2);
       ctx.json(output.getWinners());
     });
+    app.get("/agents", ctx -> ctx.json(this.agents));
     app.start(8080);
 
     return 0;

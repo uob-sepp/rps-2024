@@ -56,7 +56,11 @@ public class RockPaperScissors implements Callable<Integer> {
     IAgent player2 = agentForName(player2Agent);
 
     var app = Javalin.create();
-    app.get("/", ctx -> ctx.result("Hello world!"));
+    app.get("/", ctx -> {
+      var output = new MemoryGameOutput();
+      play(output, numberOfGames, player1, player2);
+      ctx.json(output.getWinners());
+    });
     app.start(8080);
 
     return 0;

@@ -6,8 +6,8 @@ public class RockPaperScissorsTest {
   @Test
   public void testRockAgentAlwaysBeatsScissors() {
     // setup
-    IAgent player1 = new AlwaysRockAgent();
-    IAgent player2 = new AlwaysScissorsAgent();
+    BaseAgent player1 = new AlwaysRockAgent();
+    BaseAgent player2 = new AlwaysScissorsAgent();
     RockPaperScissors game = new RockPaperScissors();
     MemoryGameOutput output = new MemoryGameOutput();
 

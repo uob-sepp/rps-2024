@@ -45,14 +45,22 @@ public class RockPaperScissors implements Callable<Integer> {
     throw new Exception(String.format("Unknown agent: %s", name));
   }
 
-  public Winner play(IAgent player1, IAgent player2) {
+  public Winner play(BaseAgent player1, BaseAgent player2) {
     HandShape p1choice = player1.nextMove();
     HandShape p2choice = player2.nextMove();
 
-    return determineWinner(p1choice, p2choice);
+    var winner = determineWinner(p1choice, p2choice);
+
+    if (winner == Winner.PLAYER_ONE) {
+      player1.registerWin();
+    } else if (winner == Winner.PLAYER_TWO) {
+      player2.registerWin();
+    }
+
+    return winner;
   }
 
-  public void play(IGameOutput output, int numberOfGames, IAgent player1, IAgent player2) {
+  public void play(IGameOutput output, int numberOfGames, BaseAgent player1, BaseAgent player2) {
     while (numberOfGames > 0) {
       output.ReportOutcome(play(player1, player2));
       numberOfGames--;
@@ -63,8 +71,8 @@ public class RockPaperScissors implements Callable<Integer> {
   public Integer call() throws Exception {
     var app = Javalin.create();
     app.get("/", ctx -> {
-      IAgent player1 = null;
-      IAgent player2 = null;
+      BaseAgent player1 = null;
+      BaseAgent player2 = null;
 
       String p1 = ctx.queryParam("p1");
       if (p1 == null) {

@@ -52,11 +52,25 @@ public class RockPaperScissors implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    IAgent player1 = agentForName(player1Agent);
-    IAgent player2 = agentForName(player2Agent);
-
     var app = Javalin.create();
     app.get("/", ctx -> {
+      IAgent player1 = null;
+      IAgent player2 = null;
+
+      String p1 = ctx.queryParam("p1");
+      if (p1 == null) {
+        player1 = agentForName(player1Agent);
+      } else {
+        player1 = agentForName(p1);
+      }
+
+      String p2 = ctx.queryParam("p2");
+      if (p2 == null) {
+        player2 = agentForName(player2Agent);
+      } else {
+        player2 = agentForName(p2);
+      }
+
       var output = new MemoryGameOutput();
       play(output, numberOfGames, player1, player2);
       ctx.json(output.getWinners());

@@ -1,5 +1,6 @@
 import java.util.concurrent.Callable;
 
+import io.javalin.Javalin;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -54,7 +55,9 @@ public class RockPaperScissors implements Callable<Integer> {
     IAgent player1 = agentForName(player1Agent);
     IAgent player2 = agentForName(player2Agent);
 
-    this.play(new StdoutGameOutput(), this.numberOfGames, player1, player2);
+    var app = Javalin.create();
+    app.get("/", ctx -> ctx.result("Hello world!"));
+    app.start(8080);
 
     return 0;
   }

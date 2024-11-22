@@ -7,6 +7,7 @@
 
 plugins {
   application
+  id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 repositories {
@@ -18,6 +19,11 @@ dependencies {
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+javafx {
+    version = "23.0.1"
+    modules("javafx.controls")
 }
 
 application {

@@ -1,6 +1,15 @@
+import static org.hibernate.cfg.JdbcSettings.FORMAT_SQL;
+import static org.hibernate.cfg.JdbcSettings.HIGHLIGHT_SQL;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_PASSWORD;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_URL;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_USER;
+import static org.hibernate.cfg.JdbcSettings.SHOW_SQL;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import org.hibernate.cfg.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -77,6 +86,15 @@ public class RockPaperScissors implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    var sessionFactory = new Configuration()
+        .setProperty(JAKARTA_JDBC_URL, "jdbc:postgresql://postgres/")
+        .setProperty(JAKARTA_JDBC_USER, "postgres")
+        .setProperty(JAKARTA_JDBC_PASSWORD, "example")
+        .setProperty(SHOW_SQL, "true")
+        .setProperty(FORMAT_SQL, "true")
+        .setProperty(HIGHLIGHT_SQL, "true")
+        .buildSessionFactory();
+
     var app = Javalin.create();
     app.get("/", ctx -> {
       BaseAgent player1 = null;

@@ -1,0 +1,6 @@
+{
+  "name": "Test",
+  "rockProbability": 0.2,
+  "paperProbability": 0.5,
+  "scissorsProbability": 0.3
+}

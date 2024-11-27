@@ -96,6 +96,8 @@ public class RockPaperScissors implements Callable<Integer> {
         .setProperty(HIGHLIGHT_SQL, "true")
         .buildSessionFactory();
 
+    sessionFactory.getSchemaManager().exportMappedObjects(true);
+
     var app = Javalin.create();
     app.get("/", ctx -> {
       BaseAgent player1 = null;

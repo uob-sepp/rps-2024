@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.LinkedList;
+
 import org.junit.jupiter.api.Test;
 
 public class RockPaperScissorsTest {
@@ -8,7 +10,7 @@ public class RockPaperScissorsTest {
     // setup
     BaseAgent player1 = new AlwaysRockAgent();
     BaseAgent player2 = new AlwaysScissorsAgent();
-    RockPaperScissors game = new RockPaperScissors();
+    RockPaperScissors game = new RockPaperScissors(new LinkedList<CustomAgent>());
     MemoryGameOutput output = new MemoryGameOutput();
 
     // run

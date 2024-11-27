@@ -87,6 +87,7 @@ public class RockPaperScissors implements Callable<Integer> {
   @Override
   public Integer call() throws Exception {
     var sessionFactory = new Configuration()
+        .addAnnotatedClass(CustomAgent.class)
         .setProperty(JAKARTA_JDBC_URL, "jdbc:postgresql://postgres/")
         .setProperty(JAKARTA_JDBC_USER, "postgres")
         .setProperty(JAKARTA_JDBC_PASSWORD, "example")

@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.javalin.Javalin;
@@ -19,11 +20,15 @@ public class RockPaperScissors implements Callable<Integer> {
 
   private HashMap<String, BaseAgent> agents = new HashMap<String, BaseAgent>();
 
-  public RockPaperScissors() {
+  public RockPaperScissors(List<CustomAgent> agents) {
     this.agents.put("AlwaysRock", new AlwaysRockAgent());
     this.agents.put("AlwaysScissors", new AlwaysScissorsAgent());
     this.agents.put("AlwaysPaper", new AlwaysPaperAgent());
     this.agents.put("StrategyChanging", new StrategyChangingAgent());
+
+    for (CustomAgent customAgent : agents) {
+      this.agents.put(customAgent.getName(), customAgent);
+    }
   }
 
   public Winner determineWinner(HandShape p1, HandShape p2) {

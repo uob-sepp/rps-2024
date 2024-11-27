@@ -33,5 +33,6 @@ public class Program {
 
   public static void main(String[] args) {
     var agents = loadAgents();
+    new CommandLine(new RockPaperScissors(agents)).execute(args);
   }
 }

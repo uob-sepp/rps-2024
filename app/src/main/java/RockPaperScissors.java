@@ -1,7 +1,11 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -19,11 +23,15 @@ public class RockPaperScissors implements Callable<Integer> {
 
   private HashMap<String, BaseAgent> agents = new HashMap<String, BaseAgent>();
 
-  public RockPaperScissors() {
+  public RockPaperScissors(List<CustomAgent> agents) {
     this.agents.put("AlwaysRock", new AlwaysRockAgent());
     this.agents.put("AlwaysScissors", new AlwaysScissorsAgent());
     this.agents.put("AlwaysPaper", new AlwaysPaperAgent());
     this.agents.put("StrategyChanging", new StrategyChangingAgent());
+
+    for (CustomAgent customAgent : agents) {
+      this.agents.put(customAgent.getName(), customAgent);
+    }
   }
 
   public Winner determineWinner(HandShape p1, HandShape p2) {
@@ -93,6 +101,12 @@ public class RockPaperScissors implements Callable<Integer> {
       ctx.json(output.getWinners());
     });
     app.get("/agents", ctx -> ctx.json(this.agents));
+    app.put("/agents", ctx -> {
+      ObjectMapper mapper = new ObjectMapper();
+      CustomAgent agent = mapper.readValue(ctx.body(), CustomAgent.class);
+      this.agents.put(agent.getName(), agent);
+      ctx.status(HttpStatus.CREATED);
+    });
     app.start(8080);
 
     return 0;

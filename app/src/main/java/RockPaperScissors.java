@@ -126,6 +126,9 @@ public class RockPaperScissors implements Callable<Integer> {
       ObjectMapper mapper = new ObjectMapper();
       CustomAgent agent = mapper.readValue(ctx.body(), CustomAgent.class);
       this.agents.put(agent.getName(), agent);
+
+      sessionFactory.inTransaction(session -> session.persist(agent));
+
       ctx.status(HttpStatus.CREATED);
     });
     app.start(8080);

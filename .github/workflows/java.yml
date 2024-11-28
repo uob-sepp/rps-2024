@@ -38,5 +38,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          path: build/distributions/rps-2024.zip
+          path: app/build/distributions/app.zip
           name: rps-java-${{ matrix.java-version }}

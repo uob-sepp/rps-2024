@@ -1,6 +1,15 @@
+import static org.hibernate.cfg.JdbcSettings.FORMAT_SQL;
+import static org.hibernate.cfg.JdbcSettings.HIGHLIGHT_SQL;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_PASSWORD;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_URL;
+import static org.hibernate.cfg.JdbcSettings.JAKARTA_JDBC_USER;
+import static org.hibernate.cfg.JdbcSettings.SHOW_SQL;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import org.hibernate.cfg.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -77,6 +86,25 @@ public class RockPaperScissors implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    var sessionFactory = new Configuration()
+        .addAnnotatedClass(CustomAgent.class)
+        .setProperty(JAKARTA_JDBC_URL, "jdbc:postgresql://postgres/")
+        .setProperty(JAKARTA_JDBC_USER, "postgres")
+        .setProperty(JAKARTA_JDBC_PASSWORD, "example")
+        .setProperty(SHOW_SQL, "true")
+        .setProperty(FORMAT_SQL, "true")
+        .setProperty(HIGHLIGHT_SQL, "true")
+        .buildSessionFactory();
+
+    sessionFactory.getSchemaManager().exportMappedObjects(true);
+
+    sessionFactory.inSession(session -> {
+      var agents = session.createNamedQuery("getAllAgents", CustomAgent.class).getResultList();
+      for (CustomAgent customAgent : agents) {
+        this.agents.put(customAgent.getName(), customAgent);
+      }
+    });
+
     var app = Javalin.create();
     app.get("/", ctx -> {
       BaseAgent player1 = null;
@@ -105,6 +133,9 @@ public class RockPaperScissors implements Callable<Integer> {
       ObjectMapper mapper = new ObjectMapper();
       CustomAgent agent = mapper.readValue(ctx.body(), CustomAgent.class);
       this.agents.put(agent.getName(), agent);
+
+      sessionFactory.inTransaction(session -> session.persist(agent));
+
       ctx.status(HttpStatus.CREATED);
     });
     app.start(8080);

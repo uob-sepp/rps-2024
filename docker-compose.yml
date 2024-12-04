@@ -1,0 +1,15 @@
+services:
+  rps:
+    build: .
+    volumes:
+      - ./app/config:/root/config
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=example
+    ports:
+      - 5432:5432

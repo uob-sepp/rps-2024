@@ -98,6 +98,13 @@ public class RockPaperScissors implements Callable<Integer> {
 
     sessionFactory.getSchemaManager().exportMappedObjects(true);
 
+    sessionFactory.inSession(session -> {
+      var agents = session.createNamedQuery("getAllAgents", CustomAgent.class).getResultList();
+      for (CustomAgent customAgent : agents) {
+        this.agents.put(customAgent.getName(), customAgent);
+      }
+    });
+
     var app = Javalin.create();
     app.get("/", ctx -> {
       BaseAgent player1 = null;

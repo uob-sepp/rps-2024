@@ -15,6 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
+import io.prometheus.metrics.core.metrics.Counter;
+import io.prometheus.metrics.core.metrics.Histogram;
+import io.prometheus.metrics.model.snapshots.Unit;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -105,7 +108,16 @@ public class RockPaperScissors implements Callable<Integer> {
       }
     });
 
-    var app = Javalin.create();
+    Counter agentCount = Counter.builder().name("agent_use_total").labelNames("agent").register();
+
+    Histogram requestDuration = Histogram.builder().name("http_request_duration_seconds").unit(Unit.SECONDS)
+        .labelNames("method", "path", "status").register();
+
+    var app = Javalin.create(cfg -> {
+      cfg.requestLogger.http((ctx, ms) -> {
+        requestDuration.labelValues(ctx.method().toString(), ctx.path(), ctx.status().toString()).observe(ms);
+      });
+    });
     app.get("/", ctx -> {
       BaseAgent player1 = null;
       BaseAgent player2 = null;
@@ -123,6 +135,9 @@ public class RockPaperScissors implements Callable<Integer> {
       } else {
         player2 = agentForName(p2);
       }
+
+      agentCount.labelValues(player1.getName()).inc();
+      agentCount.labelValues(player2.getName()).inc();
 
       var output = new MemoryGameOutput();
       play(output, numberOfGames, player1, player2);

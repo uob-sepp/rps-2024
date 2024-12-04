@@ -1,9 +1,12 @@
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import picocli.CommandLine;
+import io.prometheus.metrics.exporter.httpserver.HTTPServer;
+import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 
 public class Program {
   private static List<CustomAgent> loadAgents() {
@@ -31,7 +34,18 @@ public class Program {
     return agents;
   }
 
+  private static void initPrometheus() throws IOException {
+    JvmMetrics.builder().register();
+
+    HTTPServer.builder().port(9040).buildAndStart();
+  }
+
   public static void main(String[] args) {
+    try {
+      initPrometheus();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
     var agents = loadAgents();
     new CommandLine(new RockPaperScissors(agents)).execute(args);
   }

@@ -18,6 +18,9 @@ dependencies {
   implementation("io.javalin:javalin:6.3.0")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
   implementation("org.hibernate.orm:hibernate-core:6.6.3.Final")
+  implementation("io.prometheus:prometheus-metrics-core:1.3.4")
+  implementation("io.prometheus:prometheus-metrics-exporter-httpserver:1.3.4")
+  implementation("io.prometheus:prometheus-metrics-instrumentation-jvm:1.3.4")
 
   runtimeOnly("org.postgresql:postgresql:42.6.0")
 

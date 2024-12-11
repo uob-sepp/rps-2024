@@ -19,7 +19,7 @@ dependencies {
   implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
   implementation("org.hibernate.orm:hibernate-core:6.6.3.Final")
 
-  runtimeOnly("org.postgresql:postgresql:42.6.0")
+  runtimeOnly("org.postgresql:postgresql:42.7.4")
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")

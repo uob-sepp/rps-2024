@@ -16,7 +16,7 @@ repositories {
 dependencies {
   implementation("info.picocli:picocli:4.7.6")
   implementation("io.javalin:javalin:6.3.0")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
   implementation("org.hibernate.orm:hibernate-core:6.6.3.Final")
 
   runtimeOnly("org.postgresql:postgresql:42.6.0")

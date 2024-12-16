@@ -21,7 +21,7 @@ dependencies {
 
   runtimeOnly("org.postgresql:postgresql:42.6.0")
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
